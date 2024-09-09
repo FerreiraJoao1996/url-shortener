@@ -14,16 +14,16 @@ export class ValidatorFieldService {
 
   async validation(): Promise<void> {
     const errors: Record<string, any> = {};
-
+  
     for (const [field, rule] of Object.entries(this.rules)) {
-      if (rule.includes('required') && !this.request[field]) {
+      if (rule.includes('required') && (!this.request[field] || this.request[field].trim() === '')) {
         errors[field] = {
           message: `${field} field must not be empty.`,
           rule: 'required',
         };
       }
     }
-
+  
     if (Object.keys(errors).length > 0) {
       throw new BadRequestException({ code: 400, errors });
     }

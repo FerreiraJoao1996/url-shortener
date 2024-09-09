@@ -14,4 +14,17 @@ export class UsersValidator {
     });
     await validatorField.validation();
   }
+
+  async update(request: any): Promise<void> {
+    const validatorField = new ValidatorFieldService(request, {
+      id: 'required|string',
+      name: 'string',
+      lastname: 'string',
+      email: 'string',
+      password: 'string',
+      confirmPassword: 'string'
+      
+    });
+    await validatorField.validation();
+  }
 }
