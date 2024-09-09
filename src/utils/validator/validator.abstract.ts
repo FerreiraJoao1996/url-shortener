@@ -10,7 +10,9 @@ export abstract class ValidatorAbstract {
   }
 
   protected throwNotImplementedError(request: any): never {
-    ValidatorAbstract.logger.log(`Not implemented method called with request: ${JSON.stringify(request)}`);
+    ValidatorAbstract.logger.log(
+      `Not implemented method called with request: ${JSON.stringify(request)}`,
+    );
     throw new Error('Function not implemented!');
   }
 

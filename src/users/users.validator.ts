@@ -10,7 +10,7 @@ export class UsersValidator {
       lastname: 'required|string',
       email: 'required|string',
       password: 'required|string',
-      confirmPassword: 'required|string'
+      confirmPassword: 'required|string',
     });
     await validatorField.validation();
   }
@@ -22,8 +22,7 @@ export class UsersValidator {
       lastname: 'string',
       email: 'string',
       password: 'string',
-      confirmPassword: 'string'
-      
+      confirmPassword: 'string',
     });
     await validatorField.validation();
   }

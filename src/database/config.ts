@@ -1,12 +1,13 @@
-require('dotenv/config');
+import * as dotenv from 'dotenv';
+dotenv.config();
 
-module.exports = {
+export default {
   development: {
-    dialect: process.env.DB_TYPE_HSH,
-    host: process.env.DB_HOST_HSH,
-    port: process.env.DB_PORT_HSH,
-    username: process.env.DB_USERNAME_HSH,
-    password: process.env.DB_PASSWORD_HSH,
-    database: process.env.DB_DATABASE_HSH,
+    dialect: process.env.DB_TYPE,
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    username: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
   },
 };

@@ -17,9 +17,7 @@ export const Mysql = [
         logging: false,
         omitNull: true,
       });
-      sequelize.addModels([
-        UsersEntity
-      ]);
+      sequelize.addModels([UsersEntity]);
       await sequelize.sync();
       return sequelize;
     },
