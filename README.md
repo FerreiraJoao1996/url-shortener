@@ -17,7 +17,8 @@ endpoint de autenticação - jwt (deve retornar um token bearer)
 
 1 endpoint para encurtar o url incluindo o domínio ( ele seja encurtado para no máximo 6 caracteres)
 
-CRUD completo para usuario autenticado e sendo dele
+CRUD completo de url para usuario autenticado e sendo dele
+CRUD completo para criar usuario
 
 README explicando como rodar o projeto.
 
