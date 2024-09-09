@@ -8,7 +8,7 @@ import {
   } from 'sequelize-typescript';
   
   @Table({
-    tableName: 'users',
+    tableName: 'usuarios',
   })
   export class UsersEntity extends Model<UsersEntity> {
     @Column
@@ -16,9 +16,6 @@ import {
   
     @Column
     lastname: string;
-    
-    @Column
-    username: string;
   
     @Column
     email: string;
@@ -28,14 +25,14 @@ import {
   
     @CreatedAt
     @Column
-    created_at!: Date;
+    createdAt!: Date;
   
     @UpdatedAt
     @Column
-    updated_at!: Date;
+    updatedAt!: Date;
 
     @DeletedAt
     @Column
-    deleted_at!: Date;
+    deletedAt!: Date;
   }
   

@@ -4,7 +4,7 @@ import { UsersEntity } from 'src/users/entities/users.entity';
 
 export const Mysql = [
   {
-    // provide: 'PORTAL',
+    provide: 'url-shortener-db',
     imports: [ConfigModule],
     useFactory: async (configService: ConfigService) => {
       const sequelize = new Sequelize({
@@ -17,7 +17,9 @@ export const Mysql = [
         logging: false,
         omitNull: true,
       });
-      sequelize.addModels([UsersEntity]);
+      sequelize.addModels([
+        UsersEntity
+      ]);
       await sequelize.sync();
       return sequelize;
     },

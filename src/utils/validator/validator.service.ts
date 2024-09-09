@@ -1,4 +1,7 @@
 import { BadRequestException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { QueryTypes } from 'sequelize';
+import { Mysql } from 'src/database/mysql';
 
 export class ValidatorFieldService {
   private request: any;
@@ -24,5 +27,20 @@ export class ValidatorFieldService {
     if (Object.keys(errors).length > 0) {
       throw new BadRequestException({ code: 400, errors });
     }
+  }
+
+  async databaseValidation(query: string, values: Array<string>) {
+    const sequelize = await Mysql?.[0]?.useFactory(new ConfigService());
+
+    if (!sequelize) {
+      throw new Error('Invalid database connection');
+    }
+
+    const result = await sequelize.query(query, {
+      replacements: values,
+      type: QueryTypes.SELECT,
+    });
+
+    return result;
   }
 }

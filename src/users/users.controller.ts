@@ -1,6 +1,7 @@
 import { Body, Controller, Post, BadRequestException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersValidator } from './users.validator';
+import { User } from './dto/user';
 
 @Controller('users')
 export class UsersController {
@@ -10,7 +11,7 @@ export class UsersController {
   ) {}
 
   @Post('create')
-  async create(@Body() request: any) {
+  async create(@Body() request: User) {
     try {
       await this.userValidator.create(request);
       return await this.userService.create(request);
@@ -18,7 +19,7 @@ export class UsersController {
       if (error instanceof BadRequestException) {
         throw error;
       }
-      throw new BadRequestException(`Internal server error: ${error.message}`);
+      throw new BadRequestException(`Ocorreu um erro durante a requisição. Erro: ${error.message}`);
     }
   }
 }

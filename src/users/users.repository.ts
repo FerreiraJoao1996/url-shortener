@@ -8,10 +8,10 @@ import { InjectModel } from '@nestjs/sequelize';
 export class UsersRepository {
   constructor(@InjectModel(UsersEntity) private user: typeof UsersEntity) {}
   
-  async find(userId: number): Promise<UsersEntity> {
+  async find(email: string): Promise<UsersEntity> {
     return await this.user.findOne<UsersEntity>({
       where: {
-        id: userId,
+        email: email,
       },
     });
   }
