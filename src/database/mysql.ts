@@ -1,5 +1,6 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Sequelize } from 'sequelize-typescript';
+import { UrlEntity } from 'src/url/entities/url.entity';
 import { UsersEntity } from 'src/users/entities/users.entity';
 
 export const Mysql = [
@@ -17,7 +18,7 @@ export const Mysql = [
         logging: false,
         omitNull: true,
       });
-      sequelize.addModels([UsersEntity]);
+      sequelize.addModels([UsersEntity, UrlEntity]);
       await sequelize.sync();
       return sequelize;
     },

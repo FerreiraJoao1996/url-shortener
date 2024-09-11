@@ -4,8 +4,8 @@ import { User } from './dto/user';
 
 @Injectable()
 export class UsersValidator {
-  async create(request: User): Promise<void> {
-    const validatorField = new ValidatorFieldService(request, {
+  async create(request): Promise<void> {
+    const validatorField = new ValidatorFieldService(request.body, {
       name: 'required|string',
       lastname: 'required|string',
       email: 'required|string',
@@ -15,9 +15,8 @@ export class UsersValidator {
     await validatorField.validation();
   }
 
-  async update(request: any): Promise<void> {
-    const validatorField = new ValidatorFieldService(request, {
-      id: 'required|string',
+  async update(request): Promise<void> {
+    const validatorField = new ValidatorFieldService(request.body, {
       name: 'string',
       lastname: 'string',
       email: 'string',
@@ -25,5 +24,19 @@ export class UsersValidator {
       confirmPassword: 'string',
     });
     await validatorField.validation();
+
+    const validatorQuery = new ValidatorFieldService(request.params, {
+      id: 'required|string',
+    });
+    await validatorQuery.validation();
   }
+
+  async id(request): Promise<void> {
+
+    const validatorQuery = new ValidatorFieldService(request.params, {
+      id: 'required|string',
+    });
+    await validatorQuery.validation();
+  }
+  
 }

@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { Mysql } from './database/mysql';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { UrlModule } from './url/url.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { AuthModule } from './auth/auth.module';
     }),
     UsersModule,
     AuthModule,
+    UrlModule
   ],
   controllers: [],
   providers: [...Mysql],

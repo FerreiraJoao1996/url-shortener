@@ -12,7 +12,7 @@ export class UsersService {
     @Inject(UsersRepository) private readonly usersRepository: UsersRepository,
   ) {}
 
-  async create(body: User) {
+  async create(body) {
     try {
       const hasUser = await UsersEntity.findOne({
         where: { email: body.email },
