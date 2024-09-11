@@ -46,7 +46,7 @@ export class UsersController {
       return user;
     }
   }
-  
+
   @UseGuards(AuthGuard)
   @Delete('delete/:id')
   async delete(@Param('id') id: string) {
