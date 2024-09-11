@@ -70,6 +70,22 @@ export class UsersService {
     }
   }
 
+  async findByEmail(email: string) {
+    try {
+      if (!email) throw new Error('Email inválido ou não existe!');
+
+      const user = await UsersEntity.findOne({
+        where: { email: email },
+      });
+
+      if (!user) throw new Error('Usuário não encontrado!');
+
+      return user;
+    } catch (e) {
+      throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
   async delete(id: string) {
     try {
       if (!id) throw new Error('ID inválido ou não existe!');
