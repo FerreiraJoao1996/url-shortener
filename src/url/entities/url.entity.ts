@@ -6,6 +6,7 @@ import {
     UpdatedAt,
     DeletedAt,
     ForeignKey,
+    PrimaryKey,
   } from 'sequelize-typescript';
 import { UsersEntity } from 'src/users/entities/users.entity';
   
@@ -13,15 +14,22 @@ import { UsersEntity } from 'src/users/entities/users.entity';
     tableName: 'url',
   })
   export class UrlEntity extends Model<UrlEntity> {
+    @PrimaryKey
     @Column
-    name: string;
-  
+    id!: number;
+
     @ForeignKey (()=> UsersEntity)
     @Column
     user_id: number;
+
+    @Column
+    original_url: string;
+
+    @Column
+    short_url: string;
   
     @Column
-    number_clicks: string;
+    number_clicks: number;
   
     @CreatedAt
     @Column

@@ -9,7 +9,6 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersValidator } from './users.validator';
-import { User } from './dto/user';
 import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('users')

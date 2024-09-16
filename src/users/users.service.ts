@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { UsersEntity } from './entities/users.entity';
 import { InjectModel } from '@nestjs/sequelize';
 import { UsersRepository } from './users.repository';
-import { User } from './dto/user';
+import { UpdateUser } from './dto/user';
 import * as bcrypt from 'bcryptjs';
 
 @Injectable()
@@ -36,7 +36,7 @@ export class UsersService {
     }
   }
 
-  async update(body: User) {
+  async update(body: UpdateUser) {
     try {
       if (!body.id) throw new Error('ID inválido ou não existe!');
 

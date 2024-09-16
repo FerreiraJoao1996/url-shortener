@@ -1,3 +1,5 @@
 export type Url = {
-  url: string;
+  short_url?: string;
+  original_url: string;
+  number_clicks?: number;
 };

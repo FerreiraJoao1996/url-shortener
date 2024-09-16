@@ -4,6 +4,7 @@ import { Mysql } from './database/mysql';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { UrlModule } from './url/url.module';
+import { RedirectController } from './url/url.controller';
 
 @Module({
   imports: [
@@ -14,7 +15,7 @@ import { UrlModule } from './url/url.module';
     AuthModule,
     UrlModule
   ],
-  controllers: [],
+  controllers: [RedirectController],
   providers: [...Mysql],
   exports: [...Mysql],
 })

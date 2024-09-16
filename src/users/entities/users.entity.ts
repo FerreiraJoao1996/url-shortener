@@ -5,12 +5,17 @@ import {
   Table,
   UpdatedAt,
   DeletedAt,
+  PrimaryKey,
 } from 'sequelize-typescript';
 
 @Table({
   tableName: 'usuarios',
 })
 export class UsersEntity extends Model<UsersEntity> {
+  @PrimaryKey
+  @Column
+  id!: number;
+
   @Column
   name: string;
 
