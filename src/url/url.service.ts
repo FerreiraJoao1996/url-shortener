@@ -8,158 +8,165 @@ import { UsersEntity } from 'src/users/entities/users.entity';
 
 @Injectable()
 export class UrlService {
-	constructor(
-		@InjectModel(UrlEntity) private url: typeof UrlEntity,
-		private readonly jwtService: JwtService,
-	) { }
+  constructor(
+    @InjectModel(UrlEntity) private url: typeof UrlEntity,
+    private readonly jwtService: JwtService,
+  ) {}
 
-	async create(body: Url, tokenJWT: string): Promise<string> {
-		try {
+  async create(body: Url, tokenJWT: string): Promise<string> {
+    try {
+      const userId: number | null = await this.findUserByJWT(tokenJWT);
+      const shortCode = this.generateShortCode();
 
-			const userId: number | null = await this.findUserByJWT(tokenJWT);
-			const shortCode = this.generateShortCode();
+      const url = await UrlEntity.create({
+        original_url: body.original_url,
+        short_url: shortCode,
+        user_id: userId,
+      });
 
-			const url = await UrlEntity.create({
-				original_url: body.original_url,
-				short_url: shortCode,
-				user_id: userId
-			});
+      return `http://localhost:${process.env.PORT}/${url.short_url}`;
+    } catch (e) {
+      throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
+    }
+  }
 
-			return `http://localhost:${process.env.PORT}/${url.short_url}`;
+  async update(body, tokenJWT: string): Promise<string> {
+    try {
+      if (!body.url)
+        throw new Error(
+          'URL inválida ou não existe! Por gentileza informar os dados da url após a /',
+        );
 
-		} catch (e) {
-			throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
-		}
-	}
+      const userId: number = await this.findUserByJWT(tokenJWT);
+      const url = await UrlEntity.findOne({
+        where: {
+          short_url: body.url,
+          user_id: userId,
+        },
+      });
+      if (!url) throw new Error('URL não encontrada!');
 
-	async update(body, tokenJWT: string): Promise<string> {
-		try {
-			if (!body.url) throw new Error('URL inválida ou não existe! Por gentileza informar os dados da url após a /');
+      const newUrl = this.generateShortCode();
 
-			const userId: number = await this.findUserByJWT(tokenJWT);
-			const url = await UrlEntity.findOne({ 
-				where: { 
-					short_url: body.url,
-					user_id: userId
-				 } 
-			});
-			if (!url) throw new Error('URL não encontrada!');
+      await UrlEntity.update(
+        { short_url: newUrl },
+        { where: { short_url: body.url } },
+      );
 
-			const newUrl = this.generateShortCode();
+      const updatedUrl = await UrlEntity.findOne({
+        where: { short_url: newUrl },
+      });
 
-			await UrlEntity.update(
-				{ short_url: newUrl },
-				{ where: { short_url: body.url } }
-			);
+      return `http://localhost:${process.env.PORT}/${updatedUrl.short_url}`;
+    } catch (e) {
+      throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
+    }
+  }
 
-			const updatedUrl = await UrlEntity.findOne({ where: { short_url: newUrl } });
+  async find(url: string, tokenJWT: string) {
+    try {
+      if (!url)
+        throw new Error(
+          'URL inválida ou não existe! Por gentileza informar os dados da url após a /',
+        );
 
-			return `http://localhost:${process.env.PORT}/${updatedUrl.short_url}`;
+      const userId: number = await this.findUserByJWT(tokenJWT);
+      const shortUrl = await UrlEntity.findOne({
+        where: {
+          short_url: url,
+          user_id: userId,
+        },
+      });
 
-		} catch (e) {
-			throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
-		}
-	}
+      if (!shortUrl) throw new Error('URL não encontrado!');
 
+      return shortUrl;
+    } catch (e) {
+      throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
+    }
+  }
 
-	async find(url: string, tokenJWT: string) {
-		try {
-			if (!url) throw new Error('URL inválida ou não existe! Por gentileza informar os dados da url após a /');
+  async get(tokenJWT: string) {
+    try {
+      const userId: number = await this.findUserByJWT(tokenJWT);
+      const allUrl = await UrlEntity.findAll({ where: { user_id: userId } });
 
+      if (!allUrl) throw new Error('URL não encontrado!');
 
-			const userId: number = await this.findUserByJWT(tokenJWT);
-			const shortUrl = await UrlEntity.findOne({ 
-				where: { 
-					short_url: url,
-					user_id: userId
-				 }
-			});
+      return allUrl;
+    } catch (e) {
+      throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
+    }
+  }
 
-			if (!shortUrl) throw new Error('URL não encontrado!');
+  async delete(url: string, tokenJWT: string) {
+    try {
+      if (!url)
+        throw new Error(
+          'URL inválida ou não existe! Por gentileza informar os dados da url após a /',
+        );
 
-			return shortUrl;
-		} catch (e) {
-			throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
-		}
-	}
+      const userId: number = await this.findUserByJWT(tokenJWT);
+      const shortUrl = await UrlEntity.findOne({
+        where: {
+          short_url: url,
+          user_id: userId,
+        },
+      });
 
-	async get(tokenJWT: string) {
-		try {
+      if (!shortUrl) throw new Error('URL não encontrado!');
 
-			const userId: number = await this.findUserByJWT(tokenJWT);
-			const allUrl = await UrlEntity.findAll({ where: { user_id: userId } });
+      await UrlEntity.destroy({ where: { short_url: shortUrl.short_url } });
 
-			if (!allUrl) throw new Error('URL não encontrado!');
+      return 'URL deletada com sucesso!';
+    } catch (e) {
+      throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
+    }
+  }
 
-			return allUrl;
-		} catch (e) {
-			throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
-		}
-	}
+  private generateShortCode(): string {
+    return randomBytes(3).toString('hex');
+  }
 
-	async delete(url: string, tokenJWT: string) {
-		try {
-			if (!url) throw new Error('URL inválida ou não existe! Por gentileza informar os dados da url após a /');
+  async findByShortCode(shortCode: string): Promise<Url> {
+    return await UrlEntity.findOne({
+      where: { short_url: shortCode },
+      raw: true,
+    });
+  }
 
-			const userId: number = await this.findUserByJWT(tokenJWT);
-			const shortUrl = await UrlEntity.findOne({ 
-				where: { 
-					short_url: url,
-					user_id: userId
-				 }
-			 
-			});
+  async incrementClickCount(shortUrl: string): Promise<void> {
+    const url = await UrlEntity.findOne({ where: { short_url: shortUrl } });
 
-			if (!shortUrl) throw new Error('URL não encontrado!');
+    if (!url) {
+      throw new Error('URL não encontrada ou inválida!');
+    }
 
-			await UrlEntity.destroy({ where: { short_url: shortUrl.short_url } });
+    url.number_clicks++;
+    await url.save();
+  }
 
-			return 'URL deletada com sucesso!';
-		} catch (e) {
-			throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
-		}
-	}
+  async findUserByJWT(tokenJWT: string) {
+    let userId = null;
+    if (tokenJWT !== null) {
+      const token = tokenJWT.replace('Bearer ', '');
 
-	private generateShortCode(): string {
-		return randomBytes(3).toString('hex');
-	}
+      let decodedToken;
+      try {
+        decodedToken = this.jwtService.verify(token);
+      } catch (error) {
+        throw new HttpException(
+          'Token JWT inválido',
+          HttpStatus.UNAUTHORIZED,
+          error,
+        );
+      }
 
-	async findByShortCode(shortCode: string): Promise<Url> {
-		return await UrlEntity.findOne({
-			where: { short_url: shortCode },
-			raw: true
-		});
-	}
+      const user = await UsersEntity.findByPk(decodedToken.sub);
+      if (!user) throw new Error('Usuário não encontrado!');
+      userId = user.id;
+    }
 
-	async incrementClickCount(shortUrl: string): Promise<void> {
-		const url = await UrlEntity.findOne({ where: { short_url: shortUrl } });
-
-		if (!url) {
-			throw new Error('URL não encontrada ou inválida!');
-		}
-
-		url.number_clicks++;
-		await url.save();
-	}
-
-	async findUserByJWT(tokenJWT: string) {
-		let userId = null;
-		if (tokenJWT !== null) {
-			const token = tokenJWT.replace('Bearer ', '');
-
-			let decodedToken;
-			try {
-				decodedToken = this.jwtService.verify(token);
-			} catch (error) {
-				throw new HttpException('Token JWT inválido', HttpStatus.UNAUTHORIZED);
-			}
-
-			const user = await UsersEntity.findByPk(decodedToken.sub);
-			if (!user) throw new Error('Usuário não encontrado!');
-			userId = user.id
-		}
-
-		return userId;
-	}
-
+    return userId;
+  }
 }

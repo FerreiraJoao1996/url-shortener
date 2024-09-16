@@ -13,7 +13,7 @@ import { RedirectController } from './url/url.controller';
     }),
     UsersModule,
     AuthModule,
-    UrlModule
+    UrlModule,
   ],
   controllers: [RedirectController],
   providers: [...Mysql],

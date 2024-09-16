@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { ValidatorFieldService } from 'src/utils/validator/validator.service';
-import { User } from './dto/user';
 
 @Injectable()
 export class UsersValidator {
@@ -32,11 +31,9 @@ export class UsersValidator {
   }
 
   async id(request): Promise<void> {
-
     const validatorQuery = new ValidatorFieldService(request.params, {
       id: 'required|string',
     });
     await validatorQuery.validation();
   }
-  
 }
