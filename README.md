@@ -1,24 +1,6 @@
 <!-- NECESSÁRIOS -->
 
-banco de dados (
-    usuarios,
-    url (
-      caso seja um usuário autenticado, o sistema deve registrar que o URL pertence ao usuário,
-      contabilizar a quantidade de cliques quando o usuario listar,
-      todos os registros devem ter uma forma de saber quando foram atualizados,
-      na deleção deve ter um campo para guardar,
-      contabilizar quando o endpoint for clicado
-    )
-)
-
 Definir o que deve e não deve ser variável de ambiente..
-
-endpoint de autenticação - jwt (deve retornar um token bearer)
-
-1 endpoint para encurtar o url incluindo o domínio ( ele seja encurtado para no máximo 6 caracteres)
-
-CRUD completo de url para usuario autenticado e sendo dele
-CRUD completo para criar usuario
 
 README explicando como rodar o projeto.
 

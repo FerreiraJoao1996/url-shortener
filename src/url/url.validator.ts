@@ -4,10 +4,10 @@ import { Url } from './dto/url';
 
 @Injectable()
 export class UrlValidator {
-	async create(request: Url): Promise<void> {
-		const validatorField = new ValidatorFieldService(request, {
+	async url(request): Promise<void> {
+		const validatorQuery = new ValidatorFieldService(request.params, {
 			url: 'required|string',
 		});
-		await validatorField.validation();
+		await validatorQuery.validation();
 	}
 }
