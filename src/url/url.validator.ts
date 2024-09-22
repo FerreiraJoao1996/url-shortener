@@ -4,7 +4,7 @@ import { ValidatorFieldService } from 'src/utils/validator/validator.service';
 @Injectable()
 export class UrlValidator {
   async url(request): Promise<void> {
-    const validatorQuery = new ValidatorFieldService(request.params, {
+    const validatorQuery = new ValidatorFieldService(request.body, {
       url: 'required|string',
     });
     await validatorQuery.validation();

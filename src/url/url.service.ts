@@ -19,7 +19,7 @@ export class UrlService {
       const shortCode = this.generateShortCode();
 
       const url = await UrlEntity.create({
-        original_url: body.original_url,
+        original_url: body.url,
         short_url: shortCode,
         user_id: userId,
       });
