@@ -13,7 +13,7 @@ export class UrlService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async create(body: Url, tokenJWT: string): Promise<string> {
+  async create(body: Url, tokenJWT: string) {
     try {
       const userId: number | null = await this.findUserByJWT(tokenJWT);
       const shortCode = this.generateShortCode();
@@ -24,13 +24,16 @@ export class UrlService {
         user_id: userId,
       });
 
-      return `http://localhost:${process.env.PORT}/${url.short_url}`;
+      return {
+        shortUrl: `http://localhost:${process.env.PORT}/${url.short_url}`,
+      };
+      
     } catch (e) {
       throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
     }
   }
 
-  async update(body, tokenJWT: string): Promise<string> {
+  async update(body, tokenJWT: string) {
     try {
       if (!body.url)
         throw new Error(
@@ -57,7 +60,9 @@ export class UrlService {
         where: { short_url: newUrl },
       });
 
-      return `http://localhost:${process.env.PORT}/${updatedUrl.short_url}`;
+      return {
+        shortUrl: `http://localhost:${process.env.PORT}/${updatedUrl.short_url}`
+      };
     } catch (e) {
       throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
     }
@@ -80,7 +85,9 @@ export class UrlService {
 
       if (!shortUrl) throw new Error('URL não encontrado!');
 
-      return shortUrl;
+      return {
+        shortUrl: shortUrl
+      };
     } catch (e) {
       throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
     }
@@ -89,11 +96,18 @@ export class UrlService {
   async get(tokenJWT: string) {
     try {
       const userId: number = await this.findUserByJWT(tokenJWT);
-      const allUrl = await UrlEntity.findAll({ where: { user_id: userId } });
+      const allUrl = await UrlEntity.findAll({ 
+        where: { 
+          user_id: userId 
+        },
+        attributes: ['original_url', 'short_url', 'number_clicks']
+      });
 
       if (!allUrl) throw new Error('URL não encontrado!');
 
-      return allUrl;
+      return {
+        all: allUrl
+      };
     } catch (e) {
       throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
     }
@@ -118,7 +132,9 @@ export class UrlService {
 
       await UrlEntity.destroy({ where: { short_url: shortUrl.short_url } });
 
-      return 'URL deletada com sucesso!';
+      return {
+        message: 'URL deletada com sucesso!'
+      };
     } catch (e) {
       throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
     }

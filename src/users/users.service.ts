@@ -30,7 +30,10 @@ export class UsersService {
       body.password = passwordHash;
 
       const user = await this.user.create(body);
-      return user;
+      
+      return {
+        user: user
+      };
     } catch (e) {
       throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
     }
@@ -48,7 +51,9 @@ export class UsersService {
         where: { id: body.id },
       });
 
-      return newUser;
+      return {
+        user: newUser
+      };
     } catch (e) {
       throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
     }
@@ -64,7 +69,9 @@ export class UsersService {
 
       if (!user) throw new Error('Usuário não encontrado!');
 
-      return user;
+      return {
+        user: user
+      };
     } catch (e) {
       throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
     }
@@ -96,7 +103,9 @@ export class UsersService {
 
       await UsersEntity.destroy({ where: { id: id } });
 
-      return 'Usuário deletado com sucesso!';
+      return {
+        message: 'URL deletada com sucesso!'
+      };
     } catch (e) {
       throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
     }

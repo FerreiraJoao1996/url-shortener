@@ -25,7 +25,7 @@ export class UrlController {
 
   @Post('create')
   async create(@Request() request, @Headers() headers: Record<string, any>) {
-    await this.urlValidator.url(request);
+    await this.urlValidator.urlCreate(request);
     return await this.urlService.create(
       request.body,
       headers['authorization'] ?? null,
